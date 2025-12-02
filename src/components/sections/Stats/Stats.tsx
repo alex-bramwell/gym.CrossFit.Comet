@@ -1,4 +1,4 @@
-import { Section, Container } from '../../common';
+import { Section, Container, Button } from '../../common';
 import { stats } from '../../../data/stats';
 import styles from './Stats.module.scss';
 
@@ -14,6 +14,9 @@ const Stats = () => {
                 {stat.suffix && <span className={styles.suffix}>{stat.suffix}</span>}
               </div>
               <div className={styles.label}>{stat.label}</div>
+              <Button variant="outline" as="a" href="/about" className={styles.statCta}>
+                Learn Our Story
+              </Button>
             </div>
           ))}
         </div>
