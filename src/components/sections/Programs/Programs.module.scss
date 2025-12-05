@@ -17,8 +17,31 @@
   font-size: 1.125rem;
   color: var(--color-muted);
   max-width: 700px;
-  margin: 0 auto;
+  margin: 0 auto 2rem auto;
   line-height: 1.6;
+}
+
+.legend {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.legendBadge {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
 }
 
 .grid {
@@ -50,6 +73,22 @@
   border-radius: 0.25rem;
   margin-bottom: 1rem;
   align-self: flex-start;
+}
+
+.levelCrossFit {
+  background: var(--color-accent);
+}
+
+.levelOpenGym {
+  background: var(--color-secondary);
+}
+
+.levelSpecialty {
+  background: var(--color-specialty);
+}
+
+.levelCometPlus {
+  background: var(--color-accent2);
 }
 
 .programTitle {

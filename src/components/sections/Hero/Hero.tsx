@@ -17,7 +17,7 @@ const Hero = () => {
             <Button variant="primary" size="large">
               Book Free Trial
             </Button>
-            <Button variant="outline" size="large">
+            <Button variant="outline" size="large" as="a" href="/schedule">
               View Schedule
             </Button>
           </div>

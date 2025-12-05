@@ -19,15 +19,6 @@ export interface Coach {
   image?: string;
 }
 
-export interface Testimonial {
-  id: string;
-  name: string;
-  quote: string;
-  program?: string;
-  image?: string;
-  memberSince?: string;
-}
-
 export interface Stat {
   id: string;
   value: string | number;
