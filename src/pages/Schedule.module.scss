@@ -159,7 +159,7 @@
 }
 
 .classCell {
-  padding: 1rem 0.75rem;
+  padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -167,6 +167,7 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   min-height: 60px;
+  background: var(--color-bg-dark);
 
   &:hover:not(.cellEmpty) {
     transform: scale(1.03);
@@ -174,7 +175,7 @@
   }
 
   @media (max-width: 1024px) {
-    padding: 0.75rem 0.5rem;
+    padding: 0.4rem;
     font-size: 0.85rem;
   }
 }
@@ -185,6 +186,12 @@
   gap: 0.25rem;
   align-items: center;
   width: 100%;
+  padding: 0.75rem 0.5rem;
+  border-radius: 6px;
+
+  @media (max-width: 1024px) {
+    padding: 0.5rem 0.3rem;
+  }
 }
 
 .cellClassName {
@@ -226,10 +233,13 @@
 }
 
 .cellCrossFit {
-  background: rgba(255, 79, 31, 0.15);
   color: var(--color-accent);
 
-  &:hover {
+  .cellContent {
+    background: rgba(255, 79, 31, 0.15);
+  }
+
+  &:hover .cellContent {
     background: rgba(255, 79, 31, 0.25);
   }
 
@@ -239,10 +249,13 @@
 }
 
 .cellOpenGym {
-  background: rgba(0, 212, 255, 0.15);
   color: var(--color-secondary);
 
-  &:hover {
+  .cellContent {
+    background: rgba(0, 212, 255, 0.15);
+  }
+
+  &:hover .cellContent {
     background: rgba(0, 212, 255, 0.25);
   }
 
@@ -252,10 +265,13 @@
 }
 
 .cellSpecialty {
-  background: rgba(157, 78, 221, 0.15);
   color: var(--color-specialty);
 
-  &:hover {
+  .cellContent {
+    background: rgba(157, 78, 221, 0.15);
+  }
+
+  &:hover .cellContent {
     background: rgba(157, 78, 221, 0.25);
   }
 
@@ -265,37 +281,42 @@
 }
 
 .cellBoth {
-  background:
-    linear-gradient(to right,
-      rgba(255, 79, 31, 0.15) 0%,
-      rgba(255, 79, 31, 0.15) 50%,
-      rgba(0, 212, 255, 0.15) 50%,
-      rgba(0, 212, 255, 0.15) 100%
-    );
   color: var(--color-text);
-  position: relative;
 
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--color-accent);
+  .cellContent {
+    background:
+      linear-gradient(to right,
+        rgba(255, 79, 31, 0.15) 0%,
+        rgba(255, 79, 31, 0.15) 50%,
+        rgba(0, 212, 255, 0.15) 50%,
+        rgba(0, 212, 255, 0.15) 100%
+      );
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-accent);
+      border-radius: 6px 0 0 6px;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--color-secondary);
+      border-radius: 0 6px 6px 0;
+    }
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--color-secondary);
-  }
-
-  &:hover {
+  &:hover .cellContent {
     background:
       linear-gradient(to right,
         rgba(255, 79, 31, 0.25) 0%,
