@@ -13,7 +13,7 @@ const WOD = () => {
   };
 
   return (
-    <Section spacing="large" background="surface">
+    <Section spacing="large" background="surface" id="wod">
       <Container>
         <div className={styles.header}>
           <h2 className={styles.title}>Today at CrossFit Comet</h2>
