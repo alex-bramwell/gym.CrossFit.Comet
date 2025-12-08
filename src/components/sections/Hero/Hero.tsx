@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Button, Section, Container } from '../../common';
+import { TrialModal } from '../../TrialModal';
 import styles from './Hero.module.scss';
 
 const Hero = () => {
+  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
+
   return (
     <Section spacing="xlarge" background="dark" className={styles.hero}>
       <Container>
@@ -14,7 +18,7 @@ const Hero = () => {
             world-class programming, and a supportive atmosphere.
           </p>
           <div className={styles.actions}>
-            <Button variant="primary" size="large">
+            <Button variant="primary" size="large" onClick={() => setIsTrialModalOpen(true)}>
               Book Free Trial
             </Button>
             <Button variant="outline" size="large" as="a" href="/schedule">
@@ -37,6 +41,8 @@ const Hero = () => {
           </div>
         </div>
       </Container>
+
+      <TrialModal isOpen={isTrialModalOpen} onClose={() => setIsTrialModalOpen(false)} />
     </Section>
   );
 };
