@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Section, Container, Card, Button } from '../../common';
+import { ProgramModal } from '../../ProgramModal';
 import { programs } from '../../../data/programs';
 import { weeklySchedule } from '../../../data/schedule';
 import styles from './Programs.module.scss';
 
 const Programs = () => {
+  const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const getLevelStyle = (title: string): string => {
     const normalizedTitle = title.toLowerCase();
 
@@ -105,7 +108,7 @@ const Programs = () => {
                     </li>
                   ))}
                 </ul>
-                <Button variant="primary" as="a" href="/programs">
+                <Button variant="primary" onClick={() => setSelectedProgram(program.id)}>
                   Learn More
                 </Button>
               </div>
@@ -113,6 +116,14 @@ const Programs = () => {
           ))}
         </div>
       </Container>
+
+      {selectedProgram && (
+        <ProgramModal
+          isOpen={!!selectedProgram}
+          onClose={() => setSelectedProgram(null)}
+          programId={selectedProgram}
+        />
+      )}
     </Section>
   );
 };
