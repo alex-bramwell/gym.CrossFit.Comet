@@ -11,8 +11,16 @@ const Footer: React.FC = () => (
       <a href="/wod">WOD</a>
       <Link to="/schedule">Schedule</Link>
     </div>
-    <div>
-      &copy; {new Date().getFullYear()} CrossFit Comet. All rights reserved.
+    <div className={styles.affiliate}>
+      <div className={styles.affiliateBadge}>
+        CrossFit® Affiliate
+      </div>
+      <div className={styles.copyright}>
+        &copy; {new Date().getFullYear()} CrossFit Comet. All rights reserved.
+      </div>
+      <div className={styles.disclaimer}>
+        CrossFit® is a registered trademark of CrossFit, LLC.
+      </div>
     </div>
   </footer>
 );
