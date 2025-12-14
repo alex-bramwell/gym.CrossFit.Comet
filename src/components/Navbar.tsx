@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { TrialModal } from './TrialModal';
 import { AuthModal } from './AuthModal';
 import styles from './Navbar.module.scss';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isTrialModalOpen, setIsTrialModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -28,15 +27,6 @@ const Navbar: React.FC = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
-  };
-
-  const openTrialModal = () => {
-    setIsTrialModalOpen(true);
-    closeMenu();
-  };
-
-  const closeTrialModal = () => {
-    setIsTrialModalOpen(false);
   };
 
   const openAuthModal = () => {
@@ -69,29 +59,42 @@ const Navbar: React.FC = () => {
 
         {/* Navigation Links */}
         <div className={`${styles.links} ${isMenuOpen ? styles.linksOpen : ''}`}>
-          <Link to="/" onClick={closeMenu}>Home</Link>
+          <Link
+            to="/"
+            className={location.pathname === '/' ? styles.activeLink : ''}
+            onClick={closeMenu}
+          >
+            Home
+          </Link>
           <a href="/about" onClick={closeMenu}>About</a>
           <a href="/coaches" onClick={closeMenu}>Coaches</a>
-          <Link to="/schedule" onClick={closeMenu}>Schedule</Link>
+          <Link
+            to="/schedule"
+            className={location.pathname === '/schedule' ? styles.activeLink : ''}
+            onClick={closeMenu}
+          >
+            Schedule
+          </Link>
           <a href="/#wod" className={styles.wodLink} onClick={closeMenu}>Today's WOD</a>
 
           {/* Action Buttons - shown in mobile menu */}
           <div className={`${styles.actions} ${isMenuOpen ? styles.actionsOpen : ''}`}>
             {isAuthenticated ? (
-              <Link to="/dashboard" className={styles.dashboardLink} onClick={closeMenu} title="Dashboard">
+              <Link
+                to="/dashboard"
+                className={`${styles.dashboardLink} ${location.pathname === '/dashboard' ? styles.activeLink : ''}`}
+                onClick={closeMenu}
+                title="Dashboard"
+              >
                 <span className={styles.dashboardIcon}>⚡</span>
               </Link>
             ) : (
-              <>
-                <button className={styles.signInButton} onClick={openAuthModal}>Sign In</button>
-                <button className={styles.joinButton} onClick={openTrialModal}>Join</button>
-              </>
+              <button className={styles.signInButton} onClick={openAuthModal}>Sign In</button>
             )}
           </div>
         </div>
       </nav>
 
-      <TrialModal isOpen={isTrialModalOpen} onClose={closeTrialModal} />
       <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} initialMode="login" />
     </div>
   );
