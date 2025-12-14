@@ -10,16 +10,31 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
       setIsScrolled(scrollPosition > 50);
+
+      // Check if WOD section is in view
+      const wodSection = document.getElementById('wod');
+      if (wodSection) {
+        const rect = wodSection.getBoundingClientRect();
+        const isInView = rect.top <= 100 && rect.bottom >= 100;
+        setActiveSection(isInView ? 'wod' : '');
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
+
+    // Check hash on mount and location change
+    if (location.hash === '#wod') {
+      setActiveSection('wod');
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -75,7 +90,13 @@ const Navbar: React.FC = () => {
           >
             Schedule
           </Link>
-          <a href="/#wod" className={styles.wodLink} onClick={closeMenu}>Today's WOD</a>
+          <a
+            href="/#wod"
+            className={`${styles.wodLink} ${activeSection === 'wod' ? styles.activeWod : ''}`}
+            onClick={closeMenu}
+          >
+            Today's WOD
+          </a>
 
           {/* Action Buttons - shown in mobile menu */}
           <div className={`${styles.actions} ${isMenuOpen ? styles.actionsOpen : ''}`}>
