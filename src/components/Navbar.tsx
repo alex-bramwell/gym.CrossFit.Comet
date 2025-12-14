@@ -81,8 +81,20 @@ const Navbar: React.FC = () => {
           >
             Home
           </Link>
-          <a href="/about" onClick={closeMenu}>About</a>
-          <a href="/coaches" onClick={closeMenu}>Coaches</a>
+          <Link
+            to="/about"
+            className={location.pathname === '/about' ? styles.activeLink : ''}
+            onClick={closeMenu}
+          >
+            About
+          </Link>
+          <Link
+            to="/coaches"
+            className={location.pathname === '/coaches' ? styles.activeLink : ''}
+            onClick={closeMenu}
+          >
+            Coaches
+          </Link>
           <Link
             to="/schedule"
             className={location.pathname === '/schedule' ? styles.activeLink : ''}
