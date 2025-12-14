@@ -7,6 +7,9 @@ export interface Program {
   features: string[];
   level: 'beginner' | 'intermediate' | 'advanced' | 'all';
   image?: string;
+  price?: number;
+  priceUnit?: string;
+  priceNote?: string;
 }
 
 export interface Coach {
