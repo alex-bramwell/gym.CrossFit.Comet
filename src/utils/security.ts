@@ -1,5 +1,3 @@
-import { createHash } from 'crypto';
-
 /**
  * Sanitizes user input to prevent XSS attacks
  */

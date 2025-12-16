@@ -17,9 +17,9 @@ export const useSessionTimeout = ({
   const { isAuthenticated, logout } = useAuth();
   const [showWarning, setShowWarning] = useState(false);
   const [remainingTime, setRemainingTime] = useState(timeoutMinutes * 60); // in seconds
-  const timeoutRef = useRef<NodeJS.Timeout>();
-  const warningRef = useRef<NodeJS.Timeout>();
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const warningRef = useRef<ReturnType<typeof setTimeout>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval>>();
   const lastActivityRef = useRef<number>(Date.now());
 
   const resetTimer = useCallback(() => {
