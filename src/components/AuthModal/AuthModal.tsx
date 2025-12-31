@@ -214,30 +214,26 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </p>
           <div className={styles.completionSteps}>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>1</div>
               <div className={styles.stepText}>
-                <h4>Check your email</h4>
+                <h4><span className={styles.stepNumber}>1</span> Check your email</h4>
                 <p>Look for a password reset email from CrossFit Comet</p>
               </div>
             </div>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>2</div>
               <div className={styles.stepText}>
-                <h4>Click the reset link</h4>
+                <h4><span className={styles.stepNumber}>2</span> Click the reset link</h4>
                 <p>Follow the secure link to create a new password</p>
               </div>
             </div>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>3</div>
               <div className={styles.stepText}>
-                <h4>Create a new password</h4>
+                <h4><span className={styles.stepNumber}>3</span> Create a new password</h4>
                 <p>Set a strong, secure password for your account</p>
               </div>
             </div>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>4</div>
               <div className={styles.stepText}>
-                <h4>Sign in with new password</h4>
+                <h4><span className={styles.stepNumber}>4</span> Sign in with new password</h4>
                 <p>Return here and log in with your new credentials</p>
               </div>
             </div>
@@ -295,23 +291,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </p>
           <div className={styles.completionSteps}>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>1</div>
               <div className={styles.stepText}>
-                <h4>Check your email</h4>
+                <h4><span className={styles.stepNumber}>1</span> Check your email</h4>
                 <p>Look for an email from CrossFit Comet</p>
               </div>
             </div>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>2</div>
               <div className={styles.stepText}>
-                <h4>Verify your account</h4>
+                <h4><span className={styles.stepNumber}>2</span> Verify your account</h4>
                 <p>Click the verification link in the email</p>
               </div>
             </div>
             <div className={styles.completionStep}>
-              <div className={styles.stepCircle}>3</div>
               <div className={styles.stepText}>
-                <h4>Sign in and start training</h4>
+                <h4><span className={styles.stepNumber}>3</span> Sign in and start training</h4>
                 <p>Access your dashboard and begin your journey</p>
               </div>
             </div>
