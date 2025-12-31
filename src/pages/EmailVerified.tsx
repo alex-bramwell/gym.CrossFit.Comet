@@ -10,22 +10,41 @@ const EmailVerified = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    // Check if there's an error in the URL params
-    const error = searchParams.get('error');
-    const errorDescription = searchParams.get('error_description');
+    // Check if there's an error in the URL hash (Supabase uses hash for auth)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const hashError = hashParams.get('error');
+    const hashErrorCode = hashParams.get('error_code');
+    const hashErrorDescription = hashParams.get('error_description');
+
+    // Also check query params for errors
+    const error = searchParams.get('error') || hashError;
+    const errorCode = searchParams.get('error_code') || hashErrorCode;
+    const errorDescription = searchParams.get('error_description') || hashErrorDescription;
 
     if (error) {
       setStatus('error');
-      setErrorMessage(errorDescription || 'An error occurred during verification');
+
+      // Provide more helpful error messages
+      if (errorCode === 'otp_expired') {
+        setErrorMessage('This verification link has expired. Please request a new verification email.');
+      } else if (errorDescription) {
+        setErrorMessage(decodeURIComponent(errorDescription));
+      } else {
+        setErrorMessage('An error occurred during verification');
+      }
       return;
     }
 
-    // Check if verification was successful
-    const type = searchParams.get('type');
-    if (type === 'signup') {
+    // Check if there's an access token in the hash (successful verification)
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+
+    if (accessToken && type === 'signup') {
+      setStatus('success');
+    } else if (searchParams.get('type') === 'signup') {
       setStatus('success');
     } else {
-      // If no type parameter, assume verification is in progress
+      // If no clear success indicators, assume verification is in progress
       setTimeout(() => {
         setStatus('success');
       }, 1500);
@@ -129,7 +148,8 @@ const EmailVerified = () => {
                 <h3>What can you do?</h3>
                 <ul>
                   <li>Try signing in - your account may already be verified</li>
-                  <li>Request a new verification email from the sign-in page</li>
+                  <li>Create a new account if this was your first signup</li>
+                  <li>Use the "Forgot password?" link to reset your password if needed</li>
                   <li>Contact our support team for assistance</li>
                 </ul>
               </div>
