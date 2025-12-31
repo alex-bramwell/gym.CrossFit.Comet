@@ -55,9 +55,22 @@ const ResetPassword = () => {
     const accessToken = hashParams.get('access_token');
     const type = hashParams.get('type');
 
-    if (type !== 'recovery' || !accessToken) {
+    // Log for debugging (remove in production)
+    console.log('Reset password page loaded');
+    console.log('Hash params:', Object.fromEntries(hashParams.entries()));
+    console.log('Access token present:', !!accessToken);
+    console.log('Type:', type);
+
+    // Only show error if we're sure there's no recovery session
+    if (type && type !== 'recovery') {
+      setError('This link is not for password recovery. Please use the correct reset link from your email.');
+    } else if (!accessToken && !type) {
+      // No hash params at all - user navigated directly
+      setError('Please use the password reset link from your email to access this page.');
+    } else if (type === 'recovery' && !accessToken) {
       setError('Invalid or expired password reset link. Please request a new one.');
     }
+    // If type is 'recovery' and accessToken exists, we're good - let user reset password
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -102,6 +115,57 @@ const ResetPassword = () => {
       setIsLoading(false);
     }
   };
+
+  // Show helpful error page if accessed without valid reset token
+  const hashParams = new URLSearchParams(window.location.hash.substring(1));
+  const hasValidToken = hashParams.get('type') === 'recovery' && hashParams.get('access_token');
+
+  if (!hasValidToken && error) {
+    return (
+      <Section spacing="large" background="default">
+        <Container>
+          <div className={styles.container}>
+            <div className={styles.content}>
+              <div className={styles.header}>
+                <h1 className={styles.title}>Password Reset Required</h1>
+                <p className={styles.subtitle}>
+                  To reset your password, you need to use the reset link sent to your email
+                </p>
+              </div>
+
+              <div className={styles.errorBox}>
+                <svg className={styles.errorIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <p>{error}</p>
+              </div>
+
+              <div className={styles.helpSection}>
+                <h3>How to reset your password:</h3>
+                <ol className={styles.stepsList}>
+                  <li>Go to the sign-in page and click "Forgot password?"</li>
+                  <li>Enter your email address</li>
+                  <li>Check your email for the password reset link</li>
+                  <li>Click the link in the email to return here</li>
+                </ol>
+              </div>
+
+              <Button
+                variant="primary"
+                size="large"
+                fullWidth
+                onClick={() => navigate('/?signin=true')}
+              >
+                Go to Sign In
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Section>
+    );
+  }
 
   if (success) {
     return (
