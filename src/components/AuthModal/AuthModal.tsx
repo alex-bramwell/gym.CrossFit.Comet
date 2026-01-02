@@ -46,6 +46,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     };
   };
 
+  // Sync mode state with initialMode prop when it changes
+  useEffect(() => {
+    setMode(initialMode);
+  }, [initialMode]);
+
+  // Sync error state with initialError prop when it changes
+  useEffect(() => {
+    if (initialError) {
+      setError(initialError);
+    }
+  }, [initialError]);
+
   const passwordRequirements = (mode === 'signup' || mode === 'changePassword') ? validatePassword(password) : null;
   const isPasswordValid = passwordRequirements
     ? Object.values(passwordRequirements).every(Boolean)
