@@ -40,7 +40,7 @@ function PasswordRecoveryRedirect() {
     if (type === 'recovery' && accessToken) {
       // Navigate to home with password-reset query param and preserve the hash
       const currentPath = location.pathname + location.search;
-      if (!currentPath.includes('password-reset=true') && location.pathname !== '/') {
+      if (!currentPath.includes('password-reset=true')) {
         navigate('/?password-reset=true' + window.location.hash, { replace: true });
       }
     }
