@@ -14,7 +14,7 @@ import EmailVerified from './pages/EmailVerified';
 import ResetPassword from './pages/ResetPassword';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Component to detect password recovery tokens and redirect
+// Component to detect password recovery tokens and redirect to home with modal trigger
 function PasswordRecoveryRedirect() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,10 +25,13 @@ function PasswordRecoveryRedirect() {
     const type = hashParams.get('type');
     const accessToken = hashParams.get('access_token');
 
-    // If we have a recovery token and we're not already on the reset password page
-    if (type === 'recovery' && accessToken && location.pathname !== '/reset-password') {
-      // Redirect to reset password page with the hash intact
-      navigate('/reset-password' + window.location.hash, { replace: true });
+    // If we have a recovery token, redirect to home with a flag to open the password change modal
+    if (type === 'recovery' && accessToken) {
+      // Navigate to home with password-reset query param and preserve the hash
+      const currentPath = location.pathname + location.search;
+      if (!currentPath.includes('password-reset=true') && location.pathname !== '/') {
+        navigate('/?password-reset=true' + window.location.hash, { replace: true });
+      }
     }
   }, [navigate, location]);
 

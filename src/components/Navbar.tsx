@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { AuthModal } from './AuthModal';
 import styles from './Navbar.module.scss';
@@ -7,8 +7,10 @@ import styles from './Navbar.module.scss';
 const Navbar: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup' | 'reset' | 'changePassword'>('login');
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('');
 
@@ -36,6 +38,17 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location]);
 
+  // Check for password reset parameter and open modal
+  useEffect(() => {
+    if (searchParams.get('password-reset') === 'true') {
+      setAuthModalMode('changePassword');
+      setIsAuthModalOpen(true);
+      // Remove the query parameter from URL
+      searchParams.delete('password-reset');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -45,12 +58,14 @@ const Navbar: React.FC = () => {
   };
 
   const openAuthModal = () => {
+    setAuthModalMode('login');
     setIsAuthModalOpen(true);
     closeMenu();
   };
 
   const closeAuthModal = () => {
     setIsAuthModalOpen(false);
+    setAuthModalMode('login');
   };
 
   return (
@@ -128,7 +143,7 @@ const Navbar: React.FC = () => {
         </div>
       </nav>
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} initialMode="login" />
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} initialMode={authModalMode} />
     </div>
   );
 };
