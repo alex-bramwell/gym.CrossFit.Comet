@@ -277,8 +277,34 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           {changePasswordStep === 1 ? 'Reset Your Password' : 'Create New Password'}
         </h2>
 
+        {/* Step indicators - always visible */}
+        <div className={styles.completionSteps}>
+          <div className={styles.completionStep}>
+            <div className={styles.stepText}>
+              <h4>
+                <span className={changePasswordStep > 1 ? `${styles.stepNumber} ${styles.completed}` : styles.stepNumber}>
+                  {changePasswordStep > 1 ? '✓' : '1'}
+                </span>
+                Email Verified
+              </h4>
+              <p>You clicked the link from your email successfully</p>
+            </div>
+          </div>
+          <div className={styles.completionStep}>
+            <div className={styles.stepText}>
+              <h4>
+                <span className={changePasswordStep === 2 ? styles.stepNumber : `${styles.stepNumber} ${styles.inactive}`}>
+                  2
+                </span>
+                Create New Password
+              </h4>
+              <p>Set a strong, secure password for your account</p>
+            </div>
+          </div>
+        </div>
+
         {changePasswordStep === 1 ? (
-          // Step 1: Confirmation
+          // Step 1: Confirmation content
           <div className={styles.completionContainer}>
             <div className={styles.completionIcon}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -289,20 +315,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
             <p className={styles.completionMessage}>
               You've successfully verified your email. Let's create a new secure password for your account.
             </p>
-            <div className={styles.completionSteps}>
-              <div className={styles.completionStep}>
-                <div className={styles.stepText}>
-                  <h4><span className={styles.stepNumber}>1</span> Email Verified</h4>
-                  <p>You clicked the link from your email successfully</p>
-                </div>
-              </div>
-              <div className={styles.completionStep}>
-                <div className={styles.stepText}>
-                  <h4><span className={styles.stepNumber}>2</span> Create New Password</h4>
-                  <p>Set a strong, secure password for your account</p>
-                </div>
-              </div>
-            </div>
             <Button
               variant="primary"
               size="large"
@@ -315,23 +327,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
           </div>
         ) : (
           // Step 2: Password form
-          <>
-            <div className={styles.completionSteps}>
-              <div className={styles.completionStep}>
-                <div className={styles.stepText}>
-                  <h4><span className={`${styles.stepNumber} ${styles.completed}`}>✓</span> Email Verified</h4>
-                  <p>You clicked the link from your email successfully</p>
-                </div>
-              </div>
-              <div className={styles.completionStep}>
-                <div className={styles.stepText}>
-                  <h4><span className={styles.stepNumber}>2</span> Create New Password</h4>
-                  <p>Set a strong, secure password for your account</p>
-                </div>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit} className={styles.form}>
               {error && <div className={styles.error}>{error}</div>}
               {success && <div className={styles.success}>{success}</div>}
 
@@ -421,17 +417,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               />
             </div>
 
-              <Button
-                type="submit"
-                variant="primary"
-                size="large"
-                fullWidth
-                disabled={isLoading || !isPasswordValid || (passwordCompromised?.compromised ?? false)}
-              >
-                {isLoading ? 'Updating...' : 'Update Password'}
-              </Button>
-            </form>
-          </>
+            <Button
+              type="submit"
+              variant="primary"
+              size="large"
+              fullWidth
+              disabled={isLoading || !isPasswordValid || (passwordCompromised?.compromised ?? false)}
+            >
+              {isLoading ? 'Updating...' : 'Update Password'}
+            </Button>
+          </form>
         )}
       </div>
     );
