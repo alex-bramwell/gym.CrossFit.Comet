@@ -26,6 +26,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [honeypot, setHoneypot] = useState('');
@@ -42,7 +43,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
       hasUppercase: /[A-Z]/.test(pwd),
       hasLowercase: /[a-z]/.test(pwd),
       hasNumber: /[0-9]/.test(pwd),
-      hasSpecial: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd),
+      hasSpecial: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd),
     };
   };
 
@@ -78,7 +79,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     if (/[a-z]/.test(pwd)) strength += 10;
     if (/[A-Z]/.test(pwd)) strength += 10;
     if (/[0-9]/.test(pwd)) strength += 10;
-    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pwd)) strength += 15;
+    if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(pwd)) strength += 15;
     if (pwd.length >= 20) strength += 5;
 
     if (strength < 40) return { strength, label: 'Weak', color: '#ff4444' };
@@ -355,7 +356,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
               <div className={styles.field}>
               <label htmlFor="new-password" className={styles.label}>New Password</label>
-              <div className={styles.passwordField}>
+              <div className={styles.passwordInputWrapper}>
                 <input
                   id="new-password"
                   type={showPassword ? 'text' : 'password'}
@@ -385,6 +386,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
                   )}
                 </button>
               </div>
+              {showPassword && (
+                <div className={styles.securityWarning}>
+                  <svg className={styles.warningIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  <span>Password is visible</span>
+                </div>
+              )}
 
               {passwordStrength && (
                 <div className={styles.passwordStrength}>
@@ -405,20 +416,35 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
               {passwordRequirements && (
                 <div className={styles.passwordRequirements}>
-                  <div className={passwordRequirements.minLength ? styles.valid : styles.invalid}>
-                    {passwordRequirements.minLength ? '✓' : '✗'} At least 12 characters
+                  <div className={styles.requirementsList}>
+                    <div className={`${styles.requirement} ${passwordRequirements.minLength ? styles.met : ''}`}>
+                      <span className={styles.checkmark}>{passwordRequirements.minLength ? '✓' : '✗'}</span>
+                      <span>At least 12 characters</span>
+                    </div>
+                    <div className={`${styles.requirement} ${passwordRequirements.hasUppercase ? styles.met : ''}`}>
+                      <span className={styles.checkmark}>{passwordRequirements.hasUppercase ? '✓' : '✗'}</span>
+                      <span>One uppercase letter</span>
+                    </div>
+                    <div className={`${styles.requirement} ${passwordRequirements.hasLowercase ? styles.met : ''}`}>
+                      <span className={styles.checkmark}>{passwordRequirements.hasLowercase ? '✓' : '✗'}</span>
+                      <span>One lowercase letter</span>
+                    </div>
+                    <div className={`${styles.requirement} ${passwordRequirements.hasNumber ? styles.met : ''}`}>
+                      <span className={styles.checkmark}>{passwordRequirements.hasNumber ? '✓' : '✗'}</span>
+                      <span>One number</span>
+                    </div>
+                    <div className={`${styles.requirement} ${passwordRequirements.hasSpecial ? styles.met : ''}`}>
+                      <span className={styles.checkmark}>{passwordRequirements.hasSpecial ? '✓' : '✗'}</span>
+                      <span>One special character</span>
+                    </div>
                   </div>
-                  <div className={passwordRequirements.hasUppercase ? styles.valid : styles.invalid}>
-                    {passwordRequirements.hasUppercase ? '✓' : '✗'} One uppercase letter
-                  </div>
-                  <div className={passwordRequirements.hasLowercase ? styles.valid : styles.invalid}>
-                    {passwordRequirements.hasLowercase ? '✓' : '✗'} One lowercase letter
-                  </div>
-                  <div className={passwordRequirements.hasNumber ? styles.valid : styles.invalid}>
-                    {passwordRequirements.hasNumber ? '✓' : '✗'} One number
-                  </div>
-                  <div className={passwordRequirements.hasSpecial ? styles.valid : styles.invalid}>
-                    {passwordRequirements.hasSpecial ? '✓' : '✗'} One special character
+                  <div className={styles.passwordTip}>
+                    <svg className={styles.tipIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M9 18h6" />
+                      <path d="M10 22h4" />
+                      <path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z" />
+                    </svg>
+                    <span>Tip: Use your browser's password manager to generate a strong password for easier sign in</span>
                   </div>
                 </div>
               )}
@@ -437,16 +463,46 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
 
             <div className={styles.field}>
               <label htmlFor="confirm-password" className={styles.label}>Confirm Password</label>
-              <input
-                id="confirm-password"
-                type={showPassword ? 'text' : 'password'}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirm your new password"
-                disabled={isLoading}
-                autoComplete="new-password"
-                className={styles.input}
-              />
+              <div className={styles.passwordInputWrapper}>
+                <input
+                  id="confirm-password"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Confirm your new password"
+                  disabled={isLoading}
+                  autoComplete="new-password"
+                  className={styles.input}
+                />
+                <button
+                  type="button"
+                  className={styles.passwordToggle}
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showConfirmPassword ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                      <line x1="1" y1="1" x2="23" y2="23" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+              {showConfirmPassword && (
+                <div className={styles.securityWarning}>
+                  <svg className={styles.warningIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                  <span>Password is visible</span>
+                </div>
+              )}
             </div>
 
             <Button
