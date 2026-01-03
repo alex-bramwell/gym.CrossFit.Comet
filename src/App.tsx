@@ -50,11 +50,14 @@ function PasswordRecoveryRedirect() {
     // Only redirect if we're not already on the password-reset page
     if (type === 'recovery' && accessToken && !location.search.includes('password-reset=true')) {
       console.log('Detected recovery token, redirecting to password-reset=true');
-      // Navigate to home with password-reset query param and preserve the hash
-      const newUrl = '/?password-reset=true' + window.location.hash;
-      console.log('Navigating to:', newUrl);
       hasRedirected.current = true;
-      navigate(newUrl, { replace: true });
+      // Use window.location to preserve the hash for Supabase to process
+      // React Router navigate() doesn't preserve hash properly for Supabase auth
+      const currentHash = window.location.hash;
+      window.history.replaceState({}, '', '/?password-reset=true' + currentHash);
+      console.log('URL updated with password-reset flag, hash preserved');
+      // Trigger a re-render by updating location
+      navigate(location.pathname + '?password-reset=true' + location.hash, { replace: true });
     }
   }, [navigate, location]);
 

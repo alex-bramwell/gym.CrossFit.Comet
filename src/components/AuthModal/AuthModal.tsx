@@ -35,6 +35,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
   const [showCompletion, setShowCompletion] = useState(false);
   const [showResetCompletion, setShowResetCompletion] = useState(false);
   const [changePasswordStep, setChangePasswordStep] = useState(1);
+  const [isSessionReady, setIsSessionReady] = useState(false);
 
   // Password strength validation
   const validatePassword = (pwd: string) => {
@@ -53,13 +54,18 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
     // Reset changePasswordStep to 1 when entering changePassword mode
     if (initialMode === 'changePassword') {
       setChangePasswordStep(1);
+      setIsSessionReady(false);
 
       // Listen for auth state changes to detect when session is established
       console.log('Setting up auth state listener for password recovery...');
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         console.log('Auth state change:', { event, hasSession: !!session, user: session?.user?.email });
-        if (event === 'PASSWORD_RECOVERY' || (event === 'SIGNED_IN' && session)) {
-          console.log('Session established for password recovery');
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('PASSWORD_RECOVERY event received - session is ready');
+          setIsSessionReady(true);
+        } else if (event === 'SIGNED_IN' && session) {
+          console.log('SIGNED_IN event received - session is ready');
+          setIsSessionReady(true);
         }
       });
 
@@ -529,14 +535,20 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'l
               )}
             </div>
 
+            {!isSessionReady && (
+              <div className={styles.info}>
+                Initializing secure session...
+              </div>
+            )}
+
             <Button
               type="submit"
               variant="primary"
               size="large"
               fullWidth
-              disabled={isLoading || !isPasswordValid || isCheckingPassword || (passwordCompromised?.compromised ?? false)}
+              disabled={!isSessionReady || isLoading || !isPasswordValid || isCheckingPassword || (passwordCompromised?.compromised ?? false)}
             >
-              {isLoading ? 'Updating...' : isCheckingPassword ? 'Checking password...' : 'Update Password'}
+              {!isSessionReady ? 'Initializing...' : isLoading ? 'Updating...' : isCheckingPassword ? 'Checking password...' : 'Update Password'}
             </Button>
           </form>
         )}
