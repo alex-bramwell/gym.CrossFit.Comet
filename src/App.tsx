@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { useSessionTimeout } from './hooks/useSessionTimeout';
 import Layout from './components/Layout';
@@ -18,8 +18,14 @@ import ProtectedRoute from './components/ProtectedRoute';
 function PasswordRecoveryRedirect() {
   const navigate = useNavigate();
   const location = useLocation();
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
+    // Only run once - if we've already redirected, don't do it again
+    if (hasRedirected.current) {
+      return;
+    }
+
     // Check if there's a password recovery token in the URL hash
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     const type = hashParams.get('type');
@@ -34,6 +40,7 @@ function PasswordRecoveryRedirect() {
       console.log('Detected expired token, redirecting to reset-expired');
       // Redirect to home with error flag
       if (!location.search.includes('reset-expired=true')) {
+        hasRedirected.current = true;
         navigate('/?reset-expired=true', { replace: true });
       }
       return;
@@ -46,6 +53,7 @@ function PasswordRecoveryRedirect() {
       // Navigate to home with password-reset query param and preserve the hash
       const newUrl = '/?password-reset=true' + window.location.hash;
       console.log('Navigating to:', newUrl);
+      hasRedirected.current = true;
       navigate(newUrl, { replace: true });
     }
   }, [navigate, location]);
